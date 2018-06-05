@@ -1,0 +1,101 @@
+{
+    "Default":[
+        ["Name", "Name", "", ""],
+        ["ActionTag", "ActionTag", 0, ""],
+        ["Tag", "Tag", 0, ""],
+        ["FlipX", "FlipX", false, ""],
+        ["FlipY", "FlipY", false, ""],
+        ["IgnoreSize", "IgnoreSize", false, ""],
+        ["TouchEnabled", "TouchEnabled", false, ""],
+        ["FrameEvent", "FrameEvent", "", ""],
+        ["UserData", "CustomProperty", "", ""],
+        ["CallBackType", "CallBackType", "", ""],
+        ["CallBackName", "CallBackName", "", ""],
+        ["RotationSkewX", "RotationSkew.RotationSkewX", 0.0, ""],
+        ["RotationSkewY", "RotationSkew.RotationSkewY", 0.0, ""],
+        ["LeftMargin", "LayoutComponent.LeftMargin", 0.0, ""],
+        ["RightMargin", "LayoutComponent.RightMargin", 0.0, ""],
+        ["TopMargin", "LayoutComponent.TopMargin", 0.0, ""],
+        ["BottomMargin", "LayoutComponent.BottomMargin", 0.0, ""],
+        ["HorizontalEdge", "LayoutComponent.HorizontalEdge", "", ""],
+        ["VerticalEdge", "LayoutComponent.VerticalEdge", "", ""]
+    ],
+
+	"Button":[
+		["DisplayState", "Displaystate", true, ""],
+		["Scale9Enable", "Scale9Enabled", false, ""],
+		["ShadowOffsetX", "ShadowOffsetX", 0.0, ""],
+		["ShadowOffsetY", "ShadowOffsetY", 0.0, ""],
+		["ButtonText", "Text", "", ""],
+		["FontSize", "FontSize", "", ""]
+	],
+	"CheckBox":[
+		["DisplayState", "Displaystate", true, ""],
+		["CheckedState", "SelectedState", true, ""]
+	],
+	"LoadingBar":[
+		["ProgressInfo", "Percent", 80, ""],
+		["ProgressType", "Direction", 0, "0=Left_To_Right,1=Right_To_Left"]
+	],
+	"Slider":[
+		["ProgressInfo", "Percent", 50, ""],
+		["DisplayState", "Displaystate", true, ""]
+	],
+	"Panel":[
+		["ComboBoxIndex", "ColorType", 0, ""],
+		["BackColorAlpha", "BgColorOpacity", 255, ""],
+		["Scale9Enable", "BackGroundScale9Enabled", false, ""],
+		["ClipAble", "ClipEnabled", false, ""]
+	],
+	"ScrollView":[
+		["ComboBoxIndex", "ColorType", 0, ""],
+		["BackColorAlpha", "BgColorOpacity", 255, ""],
+		["IsBounceEnabled", "BounceEnabled", false, ""],
+		["ScrollDirectionType", "Direction", 0, "0=Vertical,1=Horizontal,2=Vertical_Horizontal"],
+		["Scale9Enable", "BackGroundScale9Enabled", false, ""],
+		["ClipAble", "ClipEnabled", false, ""]
+	],
+	"ListView":[
+		["ComboBoxIndex", "ColorType", 0, ""],
+		["BackColorAlpha", "BgColorOpacity", 255, ""],
+		["IsBounceEnabled", "BounceEnabled", false, ""],
+		["ScrollDirectionType", "Direction", 0, ""],
+		["DirectionType", "DirectionType", "", ""],
+		["HorizontalType", "HorizontalType", "", ""],
+		["VerticalType", "VerticalType", "", ""],
+		["ItemMargin", "ItemMargin", 0, ""],
+		["Scale9Enable", "BackGroundScale9Enabled", false, ""],
+		["ClipAble", "ClipEnabled", false, ""]
+	],
+	"PageView":[
+		["ComboBoxIndex", "ColorType", 0, ""],
+		["BackColorAlpha", "BgColorOpacity", 255, ""],
+		["Scale9Enable", "BackGroundScale9Enabled", false, ""],
+		["ClipAble", "ClipEnabled", false, ""]
+	],
+	"Text":[
+		["FontSize", "FontSize", "", ""],
+		["LabelText", "Text", "", ""],
+		["ShadowOffsetX", "ShadowOffsetX", 0.0, ""],
+		["ShadowOffsetY", "ShadowOffsetY", 0.0, ""]
+	],
+	"TextAtlas":[
+		["CharWidth", "ItemWidth", "", ""],
+		["CharHeight", "ItemHeight", "", ""],
+		["LabelText", "StringValue", "", ""],
+		["StartChar", "startCharMap", "", ""]
+	],
+	"TextBMFont":[
+		["LabelText", "Text", "", ""]
+	],
+	"TextField":[
+		["FontSize", "FontSize", 0, ""],
+		["IsCustomSize", "IsCustomSize", false, ""],
+		["PlaceHolderText", "PlaceHolder", "", ""],
+		["MaxLengthEnable", "MaxLengthEnabled", false, ""],
+		["MaxLengthText", "MaxLength", 0, ""],
+		["PasswordEnable", "PasswordEnabled", "", ""],
+		["PasswordStyleText", "PasswordStyleText", "*", ""],
+		["LabelText", "Text", "", ""]
+	]
+}

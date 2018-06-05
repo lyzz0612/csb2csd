@@ -1,0 +1,88 @@
+{
+    "Default":[
+        ["Size", "Size", "X=Width,Y=Height", ""],
+        ["AnchorPoint", "AnchorPoint", "", ""],
+        ["Position", "Position", "", ""],
+        ["CColor", "Color", "", ""],
+        ["Scale", "Scale", "", ""]
+    ],
+	"GameMap":[
+        ["FileData", "fileNameData", "", "ImageData"]
+	],
+    "Button": [
+        ["NormalFileData", "NormalData", "", "ImageData"],
+        ["PressedFileData", "PressedData", "", "ImageData"],
+        ["DisabledFileData", "DisabledData", "", "ImageData"],
+        ["TextColor", "TextColor", "", ""],
+        ["OutlineColor", "OutlineColor", "", ""],
+		["FontResource", "FontResource", "", "ImageData"],
+        ["ShadowColor", "ShadowColor", "", ""]
+    ],
+    "CheckBox": [
+        ["NormalBackFileData", "BackGroundBoxData", "", "ImageData"],
+        ["PressedBackFileData", "BackGroundBoxSelectedData", "", "ImageData"],
+        ["DisableBackFileData", "BackGroundBoxDisabledData", "", "ImageData"],
+        ["NodeNormalFileData", "FrontCrossData", "", "ImageData"],
+        ["NodeDisableFileData", "FrontCrossDisabledData", "", "ImageData"]
+    ],
+    "LoadingBar": [
+        ["ImageFileData", "TextureData", "", "ImageData"]
+    ],
+	"Slider":[
+        ["BackGroundData", "BarFileNameData", "", "ImageData"],
+        ["ProgressBarData", "ProgressBarData", "", "ImageData"],
+        ["BallNormalData", "BallNormalData", "", "ImageData"],
+        ["BallPressedData", "BallPressedData", "", "ImageData"],
+        ["BallDisabledData", "BallDisabledData", "", "ImageData"]
+	],
+    "Panel": [
+        ["FileData", "BackGroundImageData", "", "ImageData"],
+        ["FirstColor", "BgStartColor", "", ""],
+        ["EndColor", "BgEndColor", "", ""],
+        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["SingleColor", "BgColor", "", ""]
+    ],
+    "ScrollView": [
+        ["FileData", "BackGroundImageData", "", "ImageData"],
+        ["FirstColor", "BgStartColor", "", ""],
+        ["EndColor", "BgEndColor", "", ""],
+        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["SingleColor", "BgColor", "", ""],
+        ["InnerNodeSize", "InnerSize", "", ""]
+    ],
+    "ListView": [
+        ["FileData", "BackGroundImageData", "", "ImageData"],
+        ["FirstColor", "BgStartColor", "", ""],
+        ["EndColor", "BgEndColor", "", ""],
+        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["SingleColor", "BgColor", "", ""]
+    ],
+    "PageView": [
+        ["FileData", "BackGroundImageData", "", "ImageData"],
+        ["FirstColor", "BgStartColor", "", ""],
+        ["EndColor", "BgEndColor", "", ""],
+        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["SingleColor", "BgColor", "", ""]
+    ],
+	"TextAtlas":[
+        ["LabelAtlasFileImage_CNB", "CharMapFileData", "", "ImageData"]
+    ],
+	"TextBMFont":[
+        ["LabelBMFontFile_CNB", "FileNameData", "", "ImageData"]
+    ],
+	"TextField":[
+        ["FontResource", "FontResource", "", "ImageData"]
+    ],
+    "Sprite": [
+        ["FileData", "FileNameData", "", "ImageData"],
+        ["BlendFunc", "BlendFunc", "", ""]
+    ],
+    "ImageView": [
+        ["FileData", "FileNameData", "", "ImageData"]
+    ],
+    "Text": [
+        ["FontResource", "FontResource", "", "ImageData"],
+        ["OutlineColor", "OutlineColor", "", ""],
+        ["ShadowColor", "ShadowColor", "", ""]
+    ]
+}
