@@ -83,6 +83,14 @@ table LayoutComponentTable
 	bottomMargin:float;
 }
 
+table BoneNodeOptions
+{
+    nodeOptions:WidgetOptions;
+
+    length:float;
+    blendFunc:BlendFunc;
+}
+
 table SingleNodeOptions
 {
     nodeOptions:WidgetOptions;

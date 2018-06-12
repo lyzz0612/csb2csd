@@ -41,7 +41,6 @@ def writeHeader(groupName):
 	text = text + '  <PropertyGroup Name="%s" Type="Layer" ID="%s" Version="%s" />\n' %(groupName, randomId, ENGINE_VERSION)
 	text = text + '  <Content ctype="GameProjectContent">\n'
 	text = text + '    <Content>\n'
-	text = text + '      <Animation Duration="0" Speed="1.0000" />\n'
 
 	writeFile(text)
 
@@ -52,19 +51,157 @@ def writeFooter():
 	text = text + '</GameFile>\n'
 	writeFile(text)
 
+
+def getImageOption(childKey, resourceData):
+	fileType = "Default"
+	if resourceData.ResourceType() == 0:
+		fileType = "Normal"
+	elif resourceData.ResourceType() == 1:
+		fileType = "PlistSubImage"
+	path = resourceData.Path()
+	plistFile = resourceData.PlistFile()
+	if path == "" and plistFile == "":
+		return '  <%s />\n' %(childKey)
+	text = '  <%s Type="%s" Path="%s" Plist="%s" />\n' %(childKey, fileType, path, plistFile)
+	return text
+
+def getEasingText(easingData):
+	easingType = easingData.Type()
+	if easingType == -1:
+		return ""
+	else:
+		return '            <EasingData Type="%d" />\n' %(easingType)
+
+def getFrameText(frameData, property):
+	text = ""
+	if property == "VisibleForFrame":
+		realFrame = frameData.BoolFrame()
+		text = text + '          <BoolFrame FrameIndex="%d" Tween="%s" Value="%s" />\n' %(realFrame.FrameIndex(), realFrame.Tween(), realFrame.Value())
+
+	elif property == "Position":
+		realFrame = frameData.PointFrame()
+		text = text + '          <PointFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Position().X(), realFrame.Position().Y())
+		text = text + getEasingText(realFrame.EasingData())
+		text = text + '          </PointFrame>\n'
+
+	elif property == "Scale":
+		realFrame = frameData.ScaleFrame()
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + getEasingText(realFrame.EasingData())
+		text = text + '          </ScaleFrame>\n'
+
+	elif property == "RotationSkew":
+		realFrame = frameData.ScaleFrame()
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + getEasingText(realFrame.EasingData())
+		text = text + '          </ScaleFrame>\n'
+
+	elif property == "CColor":
+		realFrame = frameData.ColorFrame()
+		colorData = realFrame.Color()
+		text = text + '          <ColorFrame FrameIndex="%d" Alpha="%d">\n' %(realFrame.FrameIndex(), colorData.A())
+		text = text + '            <Color A="%d" R="%d" G="%d" B="%d" />' %(colorData.A(), colorData.R(), colorData.G(), colorData.B())
+		text = text + '          </ColorFrame>\n'
+
+	elif property == "FileData":
+		realFrame = frameData.TextureFrame()
+		text = text + '          <TextureFrame FrameIndex="%d" Tween="%s">\n' %(realFrame.FrameIndex(), realFrame.Tween())
+		text = text + '          ' + getImageOption("TextureFile", realFrame.TextureFile())
+		text = text + '          </TextureFrame>\n'
+
+	elif property == "FrameEvent":
+		realFrame = frameData.EventFrame()
+		text = text + '          <EventFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + '          </EventFrame>\n'
+
+	elif property == "Alpha":
+		realFrame = frameData.IntFrame()
+		text = text + '          <IntFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + '          </IntFrame>\n'
+
+	elif property == "AnchorPoint":
+		realFrame = frameData.ScaleFrame()
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + getEasingText(realFrame.EasingData())
+		text = text + '          </ScaleFrame>\n'
+
+	elif property == "ZOrder":
+		realFrame = frameData.IntFrame()
+		text = text + '          <IntFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + '          </IntFrame>\n'
+
+	elif property == "ActionValue":
+		realFrame = frameData.InnerActionFrame()
+		#todo
+	elif property == "BlendFunc":
+		realFrame = frameData.BlendFrame()
+		text = text + '          <BlendFuncFrame FrameIndex="%d" Src="%d" Dst="%d">\n' %(realFrame.FrameIndex(), realFrame.BlendFunc().Src(), realFrame.BlendFunc().Dst())
+		text = text + '          </BlendFuncFrame>\n'
+	return text
+
+def getTimeline(timeLineData):
+	property = timeLineData.Property()
+	text = '        <Timeline ActionTag="%d" Property="%s">\n' %(timeLineData.ActionTag(), timeLineData.Property())
+	frameNum = timeLineData.FramesLength()
+	for i in range(frameNum):
+		frameData = timeLineData.Frames(i)
+		text = text + getFrameText(frameData, property)
+	text = text + '        </Timeline>\n'
+	return text
+
+def writeAction(actionData):
+	duration = actionData.Duration()
+	speed = actionData.Speed()
+	timelineNum = actionData.TimeLinesLength()
+	text = '      <Animation Duration="%d" Speed="%f">\n' %(duration, speed)
+	for i in range(timelineNum):
+		timeLineData = actionData.TimeLines(i)
+		text = text + getTimeline(timeLineData)
+
+	text = text + '      </Animation>\n'
+	writeFile(text)
+
+def writeAnimation(parseData):
+	animationNum = parseData.AnimationListLength()
+	if animationNum == 0:
+		return
+	text = '      <AnimationList>\n'
+	for i in range(animationNum):
+		animationData = parseData.AnimationList(i)
+		text = text + '        <AnimationInfo Name="%s" StartIndex="%d" EndIndex="%d" />\n' %(animationData.Name(), animationData.StartIndex(), animationData.EndIndex())
+	text = '      </AnimationList>\n'
+	writeFile(text)
+
 def writeRootNode(nodeTree):
 	widgetOption = nodeTree.Options().Data()
 	widgetSize = widgetOption.Size()
+	if not widgetSize:
+		boneOption = Parser.BoneNodeOptions()
+		boneOption._tab = widgetOption._tab
+		widgetOption = boneOption.NodeOptions()
+
+	widgetSize = widgetOption.Size()
 	widgetName = widgetOption.Name()
 	text = ''
-	text = text + '      <ObjectData Name="%s" ctype="Game%sObjectData">\n' %(widgetName, widgetName)
+	nodeObject = {
+		"Node": "GameNodeObjectData",
+		"Scene": "GameNodeObjectData",
+		"Layer": "GameLayerObjectData",
+		"Skeleton": "SkeletonNodeObjectData",
+	}
+	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject[widgetName])
 	text = text + '        <Size X="%f" Y="%f" />\n' %(widgetSize.Width(), widgetSize.Height())
 	writeFile(text)
 
 def getRealOption(className, optionData):
 	realOption = None
 	optionClassName = className + "Options"
-	optionClass = getattr(Parser, optionClassName)
+	try:
+		optionClass = getattr(Parser, optionClassName)
+	except Exception as e:
+		print "error no match className: " + optionClassName
+		return 
+
 	if optionClass:
 		realOption = optionClass()
 	
@@ -85,7 +222,6 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 			return ""
 		parentValue = func()
 	result = str(parentValue)
-	print optionKey, valuePath, result
 	if result.upper() == str(defaultValue).upper():
 		return ""
 	result = result.replace("\n", "&#xA;")
@@ -127,22 +263,8 @@ def writeOptionHeader(optionData, widgetOption, className, tab):
 		ClassRules = HeaderRules[className]
 		for ruleOption in ClassRules:
 			text = text + getHeaderOption(optionData, ruleOption[0], ruleOption[1], ruleOption[2], ruleOption[3])
-	print ""
 	text = text + 'ctype="%sObjectData">\n' %(className)
 	writeFile(text)
-
-def getImageOption(childKey, resourceData):
-	fileType = "Default"
-	if resourceData.ResourceType() == 0:
-		fileType = "Normal"
-	elif resourceData.ResourceType() == 1:
-		fileType = "PlistSubImage"
-	path = resourceData.Path()
-	plistFile = resourceData.PlistFile()
-	if path == "" and plistFile == "":
-		return '  <%s />\n' %(childKey)
-	text = '  <%s Type="%s" Path="%s" Plist="%s" />\n' %(childKey, fileType, path, plistFile)
-	return text
 
 
 def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specialType=""):
@@ -206,12 +328,14 @@ def writeOption(nodeTree, tab):
 	optionData = nodeTree.Options()
 	className = nodeTree.Classname()
 	realOption = getRealOption(className, optionData)
+	if not realOption:
+		defaultText = tab + '<AbstractNodeData ctype="%seObjectData">\n' %(className)
+		writeFile(defaultText)
+		return
 	try:
 		widgetOption = realOption.WidgetOptions()
 	except:
 		widgetOption = realOption.NodeOptions()
-	else:
-		pass
 	
 	writeOptionHeader(realOption, widgetOption, className, tab)
 	writeChildOption(realOption, widgetOption, className, tab)
@@ -242,6 +366,8 @@ def startConvert(csbPath, csparsebinary):
 	nodeTree = csparsebinary.NodeTree()
 
 	writeHeader(groupName)
+	writeAction(csparsebinary.Action())
+	writeAnimation(csparsebinary)
 	writeRootNode(nodeTree)
 	recursionConvertTree(nodeTree)
 	writeFooter()

@@ -4,6 +4,7 @@ from .table import Table
 from .compat import range_func as compat_range
 
 from .AnchorPoint import AnchorPoint
+from .BoneNodeOptions import BoneNodeOptions
 from .AnimationInfo import AnimationInfo
 from .BlendFrame import BlendFrame
 from .BlendFunc import BlendFunc

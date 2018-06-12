@@ -1,6 +1,7 @@
 {
     "Default":[
         ["Name", "Name", "", ""],
+        ["Visible", "Visible", true, ""],
         ["ActionTag", "ActionTag", 0, ""],
         ["Tag", "Tag", 0, ""],
         ["FlipX", "FlipX", false, ""],
