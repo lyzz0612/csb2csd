@@ -3,8 +3,8 @@
         ["Size", "Size", "X=Width,Y=Height", ""],
         ["AnchorPoint", "AnchorPoint", "", ""],
         ["Position", "Position", "", ""],
-        ["CColor", "Color", "", ""],
-        ["Scale", "Scale", "", ""]
+        ["Scale", "Scale", "", ""],
+        ["CColor", "Color", "", ""]
     ],
 	"GameMap":[
         ["FileData", "fileNameData", "", "ImageData"]

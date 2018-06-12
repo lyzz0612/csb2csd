@@ -119,14 +119,13 @@ table ButtonOptions
     disabledData:ResourceData;
     fontResource:ResourceData;
     text:string;
-    isLocalized:bool = false;
     fontName:string;
     fontSize:int;
     textColor:Color;
     capInsets:CapInsets;
     scale9Size:FlatSize;
     scale9Enabled:bool;
-    displaystate:bool = true;
+    displaystate:bool;
 
     outlineEnabled:bool = false;
     outlineColor:Color;
@@ -136,6 +135,7 @@ table ButtonOptions
     shadowOffsetX:float = 2;
     shadowOffsetY:float = -2;
     shadowBlurRadius:int;
+    isLocalized:bool = false;
 }
 
 table CheckBoxOptions
@@ -148,7 +148,7 @@ table CheckBoxOptions
     backGroundBoxDisabledData:ResourceData;
     frontCrossDisabledData:ResourceData;
     selectedState:bool = true;
-    displaystate:bool = true;
+    displaystate:bool;
 }
 
 table ImageViewOptions
@@ -189,7 +189,6 @@ table TextOptions
     fontName:string;
     fontSize:int;
     text:string;
-    isLocalized:bool = false;
     areaWidth:int;
     areaHeight:int;
     hAlignment:int;
@@ -204,6 +203,7 @@ table TextOptions
     shadowOffsetX:float = 2;
     shadowOffsetY:float = -2;
     shadowBlurRadius:int;
+    isLocalized:bool = false;
 }
 
 table TextFieldOptions
@@ -214,7 +214,6 @@ table TextFieldOptions
     fontName:string;
     fontSize:int;
     text:string;
-    isLocalized:bool = false;
     placeHolder:string;
     passwordEnabled:bool = false;
     passwordStyleText:string;
@@ -223,6 +222,7 @@ table TextFieldOptions
     areaWidth:int;
     areaHeight:int;
     isCustomSize:bool = false;
+    isLocalized:bool = false;
 }
 
 table LoadingBarOptions
@@ -244,7 +244,7 @@ table SliderOptions
     ballDisabledData:ResourceData;
     progressBarData:ResourceData;
     percent:int = 50;
-    displaystate:bool = true;
+    displaystate:bool;
 }
 
 table PanelOptions

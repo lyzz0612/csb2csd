@@ -1,5 +1,4 @@
-import csbparsers as Parser
-import flatbuffers
+import flatbuffers as Parser
 import os, string, random, shutil, json
 
 import sys
@@ -90,6 +89,9 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 	if result.upper() == str(defaultValue).upper():
 		return ""
 	result = result.replace("\n", "&#xA;")
+	if result.find(".") != -1:
+		result = result.rstrip("0")
+		result = result.rstrip(".")
 	
 	renameDict = {}
 	if replaceInfo != "":
@@ -100,12 +102,14 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 	if renameDict.has_key(result):
 		result = renameDict[result]
 	text = '%s="%s" ' %(optionKey, result)
+
 	#scale9sprite special
-	if optionKey == "Scale9Enable" and result == "True":
-		text = text + getHeaderOption(optionData, "Scale9OriginX", "CapInsets.X")
-		text = text + getHeaderOption(optionData, "Scale9OriginY", "CapInsets.Y")
-		text = text + getHeaderOption(optionData, "Scale9Width", "CapInsets.Width")
-		text = text + getHeaderOption(optionData, "Scale9Height", "CapInsets.Width")
+	# if optionKey == "Scale9Enabled":
+	# # if optionKey == "Scale9Enable" and result == "True":
+	# 	text = text + getHeaderOption(optionData, "Scale9OriginX", "CapInsets.X")
+	# 	text = text + getHeaderOption(optionData, "Scale9OriginY", "CapInsets.Y")
+	# 	text = text + getHeaderOption(optionData, "Scale9Width", "CapInsets.Width")
+	# 	text = text + getHeaderOption(optionData, "Scale9Height", "CapInsets.Height")
 	return text
 
 def getDefaultOptionHeader(widgetOption, tab):
@@ -123,7 +127,7 @@ def writeOptionHeader(optionData, widgetOption, className, tab):
 		ClassRules = HeaderRules[className]
 		for ruleOption in ClassRules:
 			text = text + getHeaderOption(optionData, ruleOption[0], ruleOption[1], ruleOption[2], ruleOption[3])
-	
+	print ""
 	text = text + 'ctype="%sObjectData">\n' %(className)
 	writeFile(text)
 

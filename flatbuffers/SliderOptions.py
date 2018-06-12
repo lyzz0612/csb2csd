@@ -4,21 +4,21 @@
 
 import flatbuffers
 
-class CheckBoxOptions(object):
+class SliderOptions(object):
     __slots__ = ['_tab']
 
     @classmethod
-    def GetRootAsCheckBoxOptions(cls, buf, offset):
+    def GetRootAsSliderOptions(cls, buf, offset):
         n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
-        x = CheckBoxOptions()
+        x = SliderOptions()
         x.Init(buf, n + offset)
         return x
 
-    # CheckBoxOptions
+    # SliderOptions
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # CheckBoxOptions
+    # SliderOptions
     def WidgetOptions(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
@@ -29,8 +29,8 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def BackGroundBoxData(self):
+    # SliderOptions
+    def BarFileNameData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
@@ -40,8 +40,8 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def BackGroundBoxSelectedData(self):
+    # SliderOptions
+    def BallNormalData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
@@ -51,8 +51,8 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def FrontCrossData(self):
+    # SliderOptions
+    def BallPressedData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
@@ -62,8 +62,8 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def BackGroundBoxDisabledData(self):
+    # SliderOptions
+    def BallDisabledData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
@@ -73,8 +73,8 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def FrontCrossDisabledData(self):
+    # SliderOptions
+    def ProgressBarData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
@@ -84,27 +84,27 @@ class CheckBoxOptions(object):
             return obj
         return None
 
-    # CheckBoxOptions
-    def SelectedState(self):
+    # SliderOptions
+    def Percent(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 50
 
-    # CheckBoxOptions
+    # SliderOptions
     def Displaystate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def CheckBoxOptionsStart(builder): builder.StartObject(8)
-def CheckBoxOptionsAddWidgetOptions(builder, widgetOptions): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(widgetOptions), 0)
-def CheckBoxOptionsAddBackGroundBoxData(builder, backGroundBoxData): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(backGroundBoxData), 0)
-def CheckBoxOptionsAddBackGroundBoxSelectedData(builder, backGroundBoxSelectedData): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(backGroundBoxSelectedData), 0)
-def CheckBoxOptionsAddFrontCrossData(builder, frontCrossData): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(frontCrossData), 0)
-def CheckBoxOptionsAddBackGroundBoxDisabledData(builder, backGroundBoxDisabledData): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(backGroundBoxDisabledData), 0)
-def CheckBoxOptionsAddFrontCrossDisabledData(builder, frontCrossDisabledData): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(frontCrossDisabledData), 0)
-def CheckBoxOptionsAddSelectedState(builder, selectedState): builder.PrependBoolSlot(6, selectedState, 1)
-def CheckBoxOptionsAddDisplaystate(builder, displaystate): builder.PrependBoolSlot(7, displaystate, 1)
-def CheckBoxOptionsEnd(builder): return builder.EndObject()
+def SliderOptionsStart(builder): builder.StartObject(8)
+def SliderOptionsAddWidgetOptions(builder, widgetOptions): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(widgetOptions), 0)
+def SliderOptionsAddBarFileNameData(builder, barFileNameData): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(barFileNameData), 0)
+def SliderOptionsAddBallNormalData(builder, ballNormalData): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ballNormalData), 0)
+def SliderOptionsAddBallPressedData(builder, ballPressedData): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ballPressedData), 0)
+def SliderOptionsAddBallDisabledData(builder, ballDisabledData): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ballDisabledData), 0)
+def SliderOptionsAddProgressBarData(builder, progressBarData): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(progressBarData), 0)
+def SliderOptionsAddPercent(builder, percent): builder.PrependInt32Slot(6, percent, 50)
+def SliderOptionsAddDisplaystate(builder, displaystate): builder.PrependBoolSlot(7, displaystate, 0)
+def SliderOptionsEnd(builder): return builder.EndObject()
