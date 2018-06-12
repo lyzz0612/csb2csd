@@ -1,0 +1,6 @@
+*.js linguist-language=Python
+*.css linguist-language=Python
+*.html linguist-language=Python
+*.csd linguist-language=Python
+*.csb linguist-language=Python
+*.json linguist-language=Python
