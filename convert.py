@@ -1,5 +1,9 @@
 import flatbuffers as Parser
-import os, string, random, shutil, json
+import os
+import string
+import random
+import shutil
+import json
 
 import sys
 reload(sys)
@@ -199,7 +203,7 @@ def getRealOption(className, optionData):
 	try:
 		optionClass = getattr(Parser, optionClassName)
 	except Exception as e:
-		print "error no match className: " + optionClassName
+		print("error no match className: " + optionClassName)
 		return 
 
 	if optionClass:
@@ -383,7 +387,7 @@ def dealWithCsbFile(csbPath):
 
 def main():
 	if len(sys.argv) < 2:
-		print "csb path needed."
+		print("csb path needed.")
 		exit(0)
 	dealWithCsbFile(sys.argv[1])
 
