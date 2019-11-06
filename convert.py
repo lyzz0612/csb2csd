@@ -70,6 +70,8 @@ def getImageOption(childKey, resourceData):
 	return text
 
 def getEasingText(easingData):
+	if not easingData:
+		return ""
 	easingType = easingData.Type()
 	if easingType == -1:
 		return ""
@@ -115,7 +117,7 @@ def getFrameText(frameData, property):
 
 	elif property == "FrameEvent":
 		realFrame = frameData.EventFrame()
-		text = text + '          <EventFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + '          <EventFrame FrameIndex="%d" Value="%s">\n' %(realFrame.FrameIndex(), realFrame.Value())
 		text = text + '          </EventFrame>\n'
 
 	elif property == "Alpha":
@@ -304,6 +306,8 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 		keyValue = funcName
 		if renameDict.has_key(funcName):
 			keyValue = renameDict[funcName]
+		if isinstance(result, float) and result > 1.1:
+			result = int(result)
 		text = text + '%s="%s" ' %(keyValue, str(result))
 	text = text + "/>\n"
 	return text
