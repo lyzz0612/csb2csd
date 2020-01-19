@@ -5,6 +5,8 @@ cocostudio csb反编成csd
 
 ## 使用说明
 `python 版本2.7`
+
+
 `python convert.py path_of_csb`执行后会在`脚本目录/csd`生成对应的csd文件。如遇到转换过程报错或转换后格式错误的，欢迎反馈并尽量提供源文件。
 
 ## 配置相关
