@@ -7,7 +7,7 @@
         ["CColor", "Color", "", ""]
     ],
 	"GameMap":[
-        ["FileData", "fileNameData", "", "ImageData"]
+        ["FileData", "FileNameData", "", "ImageData"]
 	],
     "Button": [
         ["NormalFileData", "NormalData", "", "ImageData"],
