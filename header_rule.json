@@ -140,7 +140,7 @@
 		["CharWidth", "ItemWidth", "", ""],
 		["CharHeight", "ItemHeight", "", ""],
 		["LabelText", "StringValue", "", ""],
-		["StartChar", "startCharMap", "", ""]
+		["StartChar", "StartCharMap", "", ""]
 	],
 	"TextBMFont":[
 		["LabelText", "Text", "", ""]
