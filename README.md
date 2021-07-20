@@ -6,8 +6,13 @@ cocostudio csb反编成csd
 ## 使用说明
 `python 版本2.7`
 
+#### 处理一个csb文件
+`python convert.py <要转换的csb文件> <输出的csd文件>`执行后会生成对应的csd文件。
 
-`python convert.py path_of_csb`执行后会在`脚本目录/csd`生成对应的csd文件。如遇到转换过程报错或转换后格式错误的，欢迎反馈并尽量提供源文件。
+#### 处理整个目录
+`python convert.py <工程目录> <输出目录>`执行后目录中的csb文件会反编译成csd文件，其他类型文件原封不动复制到新的路径下。
+
+如遇到转换过程报错或转换后格式错误的，欢迎反馈并尽量提供源文件。
 
 ## 配置相关
 1. `CSParseBinary.fbs` 是基于`cocos/editor-support/cocostudio/fbs-files/CSParseBinary.fbs`，添加了一些其他结构，使用`flatc -p CSParseBinary.fbs`生成库结构，部分坑需要手动修改
