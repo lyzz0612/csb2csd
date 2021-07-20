@@ -84,5 +84,9 @@
         ["FontResource", "FontResource", "", "ImageData"],
         ["OutlineColor", "OutlineColor", "", ""],
         ["ShadowColor", "ShadowColor", "", ""]
+    ],
+    "Particle":[
+        ["FileData", "FileNameData", "", "ImageData"],
+        ["BlendFunc", "BlendFunc", "", ""]
     ]
 }

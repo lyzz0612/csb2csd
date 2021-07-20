@@ -205,7 +205,8 @@ def writeRootNode(nodeTree):
 
 def getRealOption(className, optionData):
 	realOption = None
-	optionClassName = className + "Options"
+	optionClassName = {"Particle":"ParticleSystem"}.get(className,className) + "Options"
+
 	try:
 		optionClass = getattr(Parser, optionClassName)
 	except Exception as e:
