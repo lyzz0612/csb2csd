@@ -199,7 +199,9 @@ def writeRootNode(nodeTree):
 		"Layer": "GameLayerObjectData",
 		"Skeleton": "SkeletonNodeObjectData",
 	}
-	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject[widgetName])
+	if not nodeObject.get(widgetName):
+		print("unknown widgetName",widgetName)
+	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject.get(widgetName,"GameNodeObjectData"))
 	text = text + '        <Size X="%f" Y="%f" />\n' %(widgetSize.Width(), widgetSize.Height())
 	writeFile(text)
 
