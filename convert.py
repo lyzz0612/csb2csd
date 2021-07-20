@@ -1,3 +1,4 @@
+# encoding: utf8
 import flatbuffers as Parser
 import os
 import string
@@ -6,8 +7,6 @@ import shutil
 import json
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 ENGINE_VERSION = "3.10.0.0"
@@ -28,10 +27,18 @@ if not os.path.exists(targetOut):
 
 csdPath = ""
 
+
+# override Table.String to avoid difference of 'bytes' between versions of Python
+Table_String = Parser.Table.String
+def Table_String_new(tab,off):
+	return Table_String(tab,off).decode("utf-8")
+Parser.Table.String = Table_String_new
+
+
 def writeFile(text):
 	global csdPath
-	with open(csdPath, "a") as fileObj:
-		fileObj.write(text)
+	with open(csdPath, "ab") as fileObj:
+		fileObj.write(text.encode("utf-8"))
 		fileObj.close()
 
 def writeHeader(groupName):
@@ -200,14 +207,17 @@ def writeRootNode(nodeTree):
 		"Skeleton": "SkeletonNodeObjectData",
 	}
 	if not nodeObject.get(widgetName):
-		print("unknown widgetName",widgetName)
+		print("unknown widgetName:'%s', regarded as Node by default."%widgetName)
 	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject.get(widgetName,"GameNodeObjectData"))
 	text = text + '        <Size X="%f" Y="%f" />\n' %(widgetSize.Width(), widgetSize.Height())
 	writeFile(text)
 
 def getRealOption(className, optionData):
 	realOption = None
-	optionClassName = {"Particle":"ParticleSystem"}.get(className,className) + "Options"
+	nameMap = {
+		"Particle":"ParticleSystem"
+	}
+	optionClassName = nameMap.get(className,className) + "Options"
 
 	try:
 		optionClass = getattr(Parser, optionClassName)
@@ -234,7 +244,10 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		if not func:
 			return ""
 		parentValue = func()
-	result = str(parentValue)
+
+	result = parentValue
+	if not hasattr(result,"__len__"):
+		result = str(result).rstrip("0").rstrip(".")
 
 	# ignoring field 'LabelText' will lead to a csd file parsing error
 	if not optionKey in ["LabelText","ButtonText"]:
@@ -242,10 +255,6 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		if result.upper() == str(defaultValue).upper():
 			return ""
 		result = result.replace("\n", "&#xA;")
-		# short number
-		if result.find(".") != -1:
-			result = result.rstrip("0")
-			result = result.rstrip(".")
 	
 	renameDict = {}
 	if replaceInfo != "":
@@ -253,7 +262,7 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		for renameText in renameList:
 			kvList = renameText.split("=")
 			renameDict[kvList[0]] = kvList[1]
-	if renameDict.has_key(result):
+	if result in renameDict:
 		result = renameDict[result]
 	text = '%s="%s" ' %(optionKey, result)
 
@@ -277,7 +286,7 @@ def getDefaultOptionHeader(widgetOption, tab):
 def writeOptionHeader(optionData, widgetOption, className, tab):
 	global HeaderRules
 	text = getDefaultOptionHeader(widgetOption, tab)
-	if HeaderRules.has_key(className):
+	if className in HeaderRules:
 		ClassRules = HeaderRules[className]
 		for ruleOption in ClassRules:
 			text = text + getHeaderOption(optionData, ruleOption[0], ruleOption[1], ruleOption[2], ruleOption[3])
@@ -316,13 +325,13 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 		func = getattr(parentValue, funcName)
 		result = func()
 		keyValue = funcName
-		if renameDict.has_key(funcName):
+		if funcName in renameDict:
 			keyValue = renameDict[funcName]
 		# if isinstance(result, float) and result > 1.1:
 		# 	result = int(result)
-		if specialType == "InnerSize":
-			result = int(result)
-		text = text + '%s="%s" ' %(keyValue, str(result))
+		if not hasattr(result,"__len__"):
+			result = str(result).rstrip("0").rstrip(".")
+		text = text + '%s="%s" ' %(keyValue, result)
 	text = text + "/>\n"
 	return text
 
@@ -340,7 +349,7 @@ def writeChildOption(realOption, widgetOption, className, tab):
 	global ChildRules
 	text = getDefaultOptionChild(widgetOption, tab)
 
-	if ChildRules.has_key(className):
+	if className in ChildRules:
 		ClassRules = ChildRules[className]
 		for childRule in ClassRules:
 			text = text + tab + getChildProperty(realOption, childRule[0], childRule[1], childRule[2], childRule[3])
