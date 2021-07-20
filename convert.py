@@ -175,7 +175,7 @@ def writeAnimation(parseData):
 	for i in range(animationNum):
 		animationData = parseData.AnimationList(i)
 		text = text + '        <AnimationInfo Name="%s" StartIndex="%d" EndIndex="%d" />\n' %(animationData.Name(), animationData.StartIndex(), animationData.EndIndex())
-	text = '      </AnimationList>\n'
+	text += '      </AnimationList>\n'
 	writeFile(text)
 
 def writeRootNode(nodeTree):
@@ -377,7 +377,7 @@ def startConvert(csbPath, csparsebinary):
 
 	writeHeader(groupName)
 	writeAction(csparsebinary.Action())
-	writeAnimation(csparsebinary)
+	# writeAnimation(csparsebinary)
 	writeRootNode(nodeTree)
 	recursionConvertTree(nodeTree)
 	writeFooter()
