@@ -5,6 +5,7 @@ import string
 import random
 import shutil
 import json
+from shutil import copyfile
 
 import sys
 
@@ -388,11 +389,16 @@ def recursionConvertTree(nodeTree, level = 0):
 	else:
 		writeFile(baseTab + '</ObjectData>\n')
 
-def startConvert(csbPath, csparsebinary):
+def startConvert(csbPath, csparsebinary, targetPath):
 	global csdPath, targetOut
 	_, fileName = os.path.split(csbPath)
 	groupName,_ = os.path.splitext(fileName)
-	csdPath = os.path.join(targetOut, groupName + ".csd")
+	# csdPath = os.path.join(targetOut, groupName + ".csd")
+	# csdPath = os.path.join(os.path.splitext(csbPath)[0] + ".csd")
+	fileDir,_ = os.path.split(targetPath)
+	if not os.path.exists(fileDir):
+		os.makedirs(fileDir)
+	csdPath = targetPath
 
 	nodeTree = csparsebinary.NodeTree()
 
@@ -403,20 +409,42 @@ def startConvert(csbPath, csparsebinary):
 	recursionConvertTree(nodeTree)
 	writeFooter()
 
-def dealWithCsbFile(csbPath):
+def dealWithCsbFile(csbPath,targetPath):
 	with open(csbPath, "rb") as fileObj:
 		buf = fileObj.read()
 		fileObj.close()
 
 		buf = bytearray(buf)
 		csparsebinary = Parser.CSParseBinary.GetRootAsCSParseBinary(buf, 0)
-		startConvert(csbPath, csparsebinary)
+		startConvert(csbPath, csparsebinary, targetPath)
+	print("csd generated: %s"%targetPath)
 
 def main():
-	if len(sys.argv) < 2:
-		print("csb path needed.")
+	if len(sys.argv) != 3:
+		print("反编译csb文件")
+		print("usage:\tpython convert.py <infile> <outfile>")
+		print("\tpython convert.py <infolder> <outfolder>")
 		exit(0)
-	dealWithCsbFile(sys.argv[1])
+	inpath = sys.argv[1]
+	outpath = sys.argv[2]
+	if(os.path.isdir(inpath)):
+		# treat input as a folder
+		for root,dirs,files in os.walk(inpath):
+
+			for p in [os.path.join(root,f) for f in files]:
+				outfile = os.path.join(outpath,os.path.relpath(p,inpath))
+				outdir  = os.path.dirname(outfile)
+				if not os.path.exists(outdir):
+					os.makedirs(outdir)
+				if os.path.splitext(p)[1] in [".csb"]:
+					outfile = os.path.splitext(outfile)[0]+".csd"
+					dealWithCsbFile(p,outfile)
+				else:
+					copyfile(p,outfile)
+		print("translation completed! check your artifacts under %s"%os.path.realpath(outpath))
+	else:
+		# treat input as a single file
+		dealWithCsbFile(inpath,outpath)
 
 if __name__ == '__main__':
     main()
