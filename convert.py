@@ -235,12 +235,17 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 			return ""
 		parentValue = func()
 	result = str(parentValue)
-	if result.upper() == str(defaultValue).upper():
-		return ""
-	result = result.replace("\n", "&#xA;")
-	if result.find(".") != -1:
-		result = result.rstrip("0")
-		result = result.rstrip(".")
+
+	# ignoring field 'LabelText' will lead to a csd file parsing error
+	if not optionKey in ["LabelText","ButtonText"]:
+		# ignore if equals default value
+		if result.upper() == str(defaultValue).upper():
+			return ""
+		result = result.replace("\n", "&#xA;")
+		# short number
+		if result.find(".") != -1:
+			result = result.rstrip("0")
+			result = result.rstrip(".")
 	
 	renameDict = {}
 	if replaceInfo != "":
