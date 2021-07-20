@@ -48,7 +48,7 @@
         ["EndColor", "BgEndColor", "", ""],
         ["ColorVector", "ColorVector", "ScaleX=VectorX,ScaleY=VectorY", ""],
         ["SingleColor", "BgColor", "", ""],
-        ["InnerNodeSize", "InnerSize", "", ""]
+        ["InnerNodeSize", "InnerSize", "", "InnerSize"]
     ],
     "ListView": [
         ["FileData", "BackGroundImageData", "", "ImageData"],

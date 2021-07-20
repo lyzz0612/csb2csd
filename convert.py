@@ -306,7 +306,9 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 		keyValue = funcName
 		if renameDict.has_key(funcName):
 			keyValue = renameDict[funcName]
-		if isinstance(result, float) and result > 1.1:
+		# if isinstance(result, float) and result > 1.1:
+		# 	result = int(result)
+		if specialType == "InnerSize":
 			result = int(result)
 		text = text + '%s="%s" ' %(keyValue, str(result))
 	text = text + "/>\n"
