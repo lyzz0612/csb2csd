@@ -66,6 +66,10 @@ def getImageOption(childKey, resourceData):
 	plistFile = resourceData.PlistFile()
 	if path == "" and plistFile == "":
 		return '  <%s />\n' %(childKey)
+
+	if path.startswith("Default/"):
+		fileType = "Default"
+
 	text = '  <%s Type="%s" Path="%s" Plist="%s" />\n' %(childKey, fileType, path, plistFile)
 	return text
 
