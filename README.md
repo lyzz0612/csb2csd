@@ -4,13 +4,9 @@ cocostudio csb反编成csd
 建完工程搜了遍才发现已经有大佬实现了[csb2csd](https://github.com/DavidFeng/csb2csd)。可惜在windows系统折腾了几遍竟然没法编译成功(linux上一遍过了)。还是决定自己手撸一个好了。
 
 ## 使用说明
-`python 版本2.7`
+1. 处理一个csb文件，运行`python convert.py <csb_file_in> <csd_file_out>`，执行后会生成对应的csd文件。
 
-#### 处理一个csb文件
-`python convert.py <要转换的csb文件> <输出的csd文件>`执行后会生成对应的csd文件。
-
-#### 处理整个目录
-`python convert.py <工程目录> <输出目录>`执行后目录中的csb文件会反编译成csd文件，其他类型文件原封不动复制到新的路径下。
+2. 处理整个目录，运行`python convert.py <dir_in> <dir_out>`，执行后目录中的csb文件会反编译成csd文件，其他类型文件原封不动复制到新的路径下。
 
 如遇到转换过程报错或转换后格式错误的，欢迎反馈并尽量提供源文件。
 
