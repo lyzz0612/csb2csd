@@ -251,7 +251,7 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		result = str(result).rstrip("0").rstrip(".")
 
 	# ignoring field 'LabelText' will lead to a csd file parsing error
-	if not optionKey in ["LabelText","ButtonText"]:
+	if not optionKey in ["LabelText","ButtonText","PlaceHolderText"]:
 		# ignore if equals default value
 		if result.upper() == str(defaultValue).upper():
 			return ""
