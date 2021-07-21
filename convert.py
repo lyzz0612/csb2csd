@@ -35,6 +35,14 @@ def Table_String_new(tab,off):
 	return Table_String(tab,off).decode("utf-8")
 Parser.Table.String = Table_String_new
 
+def normalizeResult(result):
+	if isinstance(result,(str,bytes,unicode)):
+		return result
+	if isinstance(result,float):
+		result = "%f"%result
+		if "." in result:
+			return result.rstrip("0").rstrip(".")
+	return str(result)
 
 def writeFile(text):
 	global csdPath
@@ -246,9 +254,7 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 			return ""
 		parentValue = func()
 
-	result = parentValue
-	if not hasattr(result,"__len__"):
-		result = str(result).rstrip("0").rstrip(".")
+	result = normalizeResult(parentValue)
 
 	# ignoring field 'LabelText' will lead to a csd file parsing error
 	if not optionKey in ["LabelText","ButtonText","PlaceHolderText"]:
@@ -324,14 +330,12 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 	text = '  <%s ' %(optionKey)
 	for funcName in validFuncList:
 		func = getattr(parentValue, funcName)
-		result = func()
+		result = normalizeResult(func())
 		keyValue = funcName
 		if funcName in renameDict:
 			keyValue = renameDict[funcName]
 		# if isinstance(result, float) and result > 1.1:
 		# 	result = int(result)
-		if not hasattr(result,"__len__"):
-			result = str(result).rstrip("0").rstrip(".")
 		text = text + '%s="%s" ' %(keyValue, result)
 	text = text + "/>\n"
 	return text
