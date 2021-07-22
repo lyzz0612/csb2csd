@@ -155,6 +155,7 @@ def getFrameText(frameData, property):
 	elif property == "Alpha":
 		realFrame = frameData.IntFrame()
 		text = text + '          <IntFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + getEasingText(realFrame.EasingData())
 		text = text + '          </IntFrame>\n'
 
 	elif property == "AnchorPoint":
