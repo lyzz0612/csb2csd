@@ -35,13 +35,25 @@ def Table_String_new(tab,off):
 	return Table_String(tab,off).decode("utf-8")
 Parser.Table.String = Table_String_new
 
+str_types = (str,)
+try:
+	str_types += (bytes,)
+except:
+	pass
+try:
+	str_types += (unicode,)
+except:
+	pass
+
 def normalizeResult(result):
-	if isinstance(result,(str,bytes,unicode)):
+
+	if isinstance(result,str_types):
 		return result
 	if isinstance(result,float):
 		result = "%f"%result
 		if "." in result:
 			return result.rstrip("0").rstrip(".")
+		return str(result)
 	return str(result)
 
 def writeFile(text):
