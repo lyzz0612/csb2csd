@@ -39,14 +39,14 @@
         ["FileData", "BackGroundImageData", "", "ImageData"],
         ["FirstColor", "BgStartColor", "", ""],
         ["EndColor", "BgEndColor", "", ""],
-        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["ColorVector", "ColorVector", "ScaleX=VectorX,ScaleY=VectorY", ""],
         ["SingleColor", "BgColor", "", ""]
     ],
     "ScrollView": [
         ["FileData", "BackGroundImageData", "", "ImageData"],
         ["FirstColor", "BgStartColor", "", ""],
         ["EndColor", "BgEndColor", "", ""],
-        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["ColorVector", "ColorVector", "ScaleX=VectorX,ScaleY=VectorY", ""],
         ["SingleColor", "BgColor", "", ""],
         ["InnerNodeSize", "InnerSize", "", ""]
     ],
@@ -54,14 +54,14 @@
         ["FileData", "BackGroundImageData", "", "ImageData"],
         ["FirstColor", "BgStartColor", "", ""],
         ["EndColor", "BgEndColor", "", ""],
-        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["ColorVector", "ColorVector", "ScaleX=VectorX,ScaleY=VectorY", ""],
         ["SingleColor", "BgColor", "", ""]
     ],
     "PageView": [
         ["FileData", "BackGroundImageData", "", "ImageData"],
         ["FirstColor", "BgStartColor", "", ""],
         ["EndColor", "BgEndColor", "", ""],
-        ["ColorVector", "ColorVector", "VectorX=ScaleX,VectorY=ScaleY", ""],
+        ["ColorVector", "ColorVector", "ScaleX=VectorX,ScaleY=VectorY", ""],
         ["SingleColor", "BgColor", "", ""]
     ],
 	"TextAtlas":[
@@ -84,5 +84,9 @@
         ["FontResource", "FontResource", "", "ImageData"],
         ["OutlineColor", "OutlineColor", "", ""],
         ["ShadowColor", "ShadowColor", "", ""]
+    ],
+    "Particle":[
+        ["FileData", "FileNameData", "", "ImageData"],
+        ["BlendFunc", "BlendFunc", "", ""]
     ]
 }

@@ -1,13 +1,13 @@
+# encoding: utf8
 import flatbuffers as Parser
 import os
 import string
 import random
 import shutil
 import json
+from shutil import copyfile
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 ENGINE_VERSION = "3.10.0.0"
@@ -28,10 +28,38 @@ if not os.path.exists(targetOut):
 
 csdPath = ""
 
+
+# override Table.String to avoid difference of 'bytes' between versions of Python
+Table_String = Parser.Table.String
+def Table_String_new(tab,off):
+	return Table_String(tab,off).decode("utf-8")
+Parser.Table.String = Table_String_new
+
+str_types = (str,)
+try:
+	str_types += (bytes,)
+except:
+	pass
+try:
+	str_types += (unicode,)
+except:
+	pass
+
+def normalizeResult(result):
+
+	if isinstance(result,str_types):
+		return result
+	if isinstance(result,float):
+		result = "%f"%result
+		if "." in result:
+			return result.rstrip("0").rstrip(".")
+		return str(result)
+	return str(result)
+
 def writeFile(text):
 	global csdPath
-	with open(csdPath, "a") as fileObj:
-		fileObj.write(text)
+	with open(csdPath, "ab") as fileObj:
+		fileObj.write(text.encode("utf-8"))
 		fileObj.close()
 
 def writeHeader(groupName):
@@ -66,6 +94,10 @@ def getImageOption(childKey, resourceData):
 	plistFile = resourceData.PlistFile()
 	if path == "" and plistFile == "":
 		return '  <%s />\n' %(childKey)
+
+	if path.startswith("Default/"):
+		fileType = "Default"
+
 	text = '  <%s Type="%s" Path="%s" Plist="%s" />\n' %(childKey, fileType, path, plistFile)
 	return text
 
@@ -123,6 +155,7 @@ def getFrameText(frameData, property):
 	elif property == "Alpha":
 		realFrame = frameData.IntFrame()
 		text = text + '          <IntFrame FrameIndex="%d" Value="%d">\n' %(realFrame.FrameIndex(), realFrame.Value())
+		text = text + getEasingText(realFrame.EasingData())
 		text = text + '          </IntFrame>\n'
 
 	elif property == "AnchorPoint":
@@ -175,7 +208,7 @@ def writeAnimation(parseData):
 	for i in range(animationNum):
 		animationData = parseData.AnimationList(i)
 		text = text + '        <AnimationInfo Name="%s" StartIndex="%d" EndIndex="%d" />\n' %(animationData.Name(), animationData.StartIndex(), animationData.EndIndex())
-	text = '      </AnimationList>\n'
+	text += '      </AnimationList>\n'
 	writeFile(text)
 
 def writeRootNode(nodeTree):
@@ -195,13 +228,19 @@ def writeRootNode(nodeTree):
 		"Layer": "GameLayerObjectData",
 		"Skeleton": "SkeletonNodeObjectData",
 	}
-	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject[widgetName])
+	if not nodeObject.get(widgetName):
+		print("unknown widgetName:'%s', regarded as Node by default."%widgetName)
+	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject.get(widgetName,"GameNodeObjectData"))
 	text = text + '        <Size X="%f" Y="%f" />\n' %(widgetSize.Width(), widgetSize.Height())
 	writeFile(text)
 
 def getRealOption(className, optionData):
 	realOption = None
-	optionClassName = className + "Options"
+	nameMap = {
+		"Particle":"ParticleSystem"
+	}
+	optionClassName = nameMap.get(className,className) + "Options"
+
 	try:
 		optionClass = getattr(Parser, optionClassName)
 	except Exception as e:
@@ -227,13 +266,15 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		if not func:
 			return ""
 		parentValue = func()
-	result = str(parentValue)
-	if result.upper() == str(defaultValue).upper():
-		return ""
-	result = result.replace("\n", "&#xA;")
-	if result.find(".") != -1:
-		result = result.rstrip("0")
-		result = result.rstrip(".")
+
+	result = normalizeResult(parentValue)
+
+	# ignoring field 'LabelText' will lead to a csd file parsing error
+	if not optionKey in ["LabelText","ButtonText","PlaceHolderText"]:
+		# ignore if equals default value
+		if result.upper() == str(defaultValue).upper():
+			return ""
+		result = result.replace("\n", "&#xA;")
 	
 	renameDict = {}
 	if replaceInfo != "":
@@ -241,7 +282,7 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		for renameText in renameList:
 			kvList = renameText.split("=")
 			renameDict[kvList[0]] = kvList[1]
-	if renameDict.has_key(result):
+	if result in renameDict:
 		result = renameDict[result]
 	text = '%s="%s" ' %(optionKey, result)
 
@@ -265,7 +306,7 @@ def getDefaultOptionHeader(widgetOption, tab):
 def writeOptionHeader(optionData, widgetOption, className, tab):
 	global HeaderRules
 	text = getDefaultOptionHeader(widgetOption, tab)
-	if HeaderRules.has_key(className):
+	if className in HeaderRules:
 		ClassRules = HeaderRules[className]
 		for ruleOption in ClassRules:
 			text = text + getHeaderOption(optionData, ruleOption[0], ruleOption[1], ruleOption[2], ruleOption[3])
@@ -302,13 +343,13 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 	text = '  <%s ' %(optionKey)
 	for funcName in validFuncList:
 		func = getattr(parentValue, funcName)
-		result = func()
+		result = normalizeResult(func())
 		keyValue = funcName
-		if renameDict.has_key(funcName):
+		if funcName in renameDict:
 			keyValue = renameDict[funcName]
-		if isinstance(result, float) and result > 1.1:
-			result = int(result)
-		text = text + '%s="%s" ' %(keyValue, str(result))
+		# if isinstance(result, float) and result > 1.1:
+		# 	result = int(result)
+		text = text + '%s="%s" ' %(keyValue, result)
 	text = text + "/>\n"
 	return text
 
@@ -326,7 +367,7 @@ def writeChildOption(realOption, widgetOption, className, tab):
 	global ChildRules
 	text = getDefaultOptionChild(widgetOption, tab)
 
-	if ChildRules.has_key(className):
+	if className in ChildRules:
 		ClassRules = ChildRules[className]
 		for childRule in ClassRules:
 			text = text + tab + getChildProperty(realOption, childRule[0], childRule[1], childRule[2], childRule[3])
@@ -365,35 +406,62 @@ def recursionConvertTree(nodeTree, level = 0):
 	else:
 		writeFile(baseTab + '</ObjectData>\n')
 
-def startConvert(csbPath, csparsebinary):
+def startConvert(csbPath, csparsebinary, targetPath):
 	global csdPath, targetOut
 	_, fileName = os.path.split(csbPath)
 	groupName,_ = os.path.splitext(fileName)
-	csdPath = os.path.join(targetOut, groupName + ".csd")
+	# csdPath = os.path.join(targetOut, groupName + ".csd")
+	# csdPath = os.path.join(os.path.splitext(csbPath)[0] + ".csd")
+	fileDir,_ = os.path.split(targetPath)
+	if not os.path.exists(fileDir):
+		os.makedirs(fileDir)
+	csdPath = targetPath
 
 	nodeTree = csparsebinary.NodeTree()
 
 	writeHeader(groupName)
 	writeAction(csparsebinary.Action())
-	writeAnimation(csparsebinary)
+	# writeAnimation(csparsebinary)
 	writeRootNode(nodeTree)
 	recursionConvertTree(nodeTree)
 	writeFooter()
 
-def dealWithCsbFile(csbPath):
+def dealWithCsbFile(csbPath,targetPath):
 	with open(csbPath, "rb") as fileObj:
 		buf = fileObj.read()
 		fileObj.close()
 
 		buf = bytearray(buf)
 		csparsebinary = Parser.CSParseBinary.GetRootAsCSParseBinary(buf, 0)
-		startConvert(csbPath, csparsebinary)
+		startConvert(csbPath, csparsebinary, targetPath)
+	print("csd generated: %s"%targetPath)
 
 def main():
-	if len(sys.argv) < 2:
-		print("csb path needed.")
+	if len(sys.argv) != 3:
+		print("反编译csb文件")
+		print("usage:\tpython convert.py <infile> <outfile>")
+		print("\tpython convert.py <infolder> <outfolder>")
 		exit(0)
-	dealWithCsbFile(sys.argv[1])
+	inpath = sys.argv[1]
+	outpath = sys.argv[2]
+	if(os.path.isdir(inpath)):
+		# treat input as a folder
+		for root,dirs,files in os.walk(inpath):
+
+			for p in [os.path.join(root,f) for f in files]:
+				outfile = os.path.join(outpath,os.path.relpath(p,inpath))
+				outdir  = os.path.dirname(outfile)
+				if not os.path.exists(outdir):
+					os.makedirs(outdir)
+				if os.path.splitext(p)[1] in [".csb"]:
+					outfile = os.path.splitext(outfile)[0]+".csd"
+					dealWithCsbFile(p,outfile)
+				else:
+					copyfile(p,outfile)
+		print("translation completed! check your artifacts under %s"%os.path.realpath(outpath))
+	else:
+		# treat input as a single file
+		dealWithCsbFile(inpath,outpath)
 
 if __name__ == '__main__':
     main()
