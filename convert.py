@@ -223,12 +223,12 @@ def writeRootNode(nodeTree):
 	widgetName = widgetOption.Name()
 	text = ''
 	nodeObject = {
-		"Node": "GameNodeObjectData",
-		"Scene": "GameNodeObjectData",
-		"Layer": "GameLayerObjectData",
-		"Skeleton": "SkeletonNodeObjectData",
+		"node": "GameNodeObjectData",
+		"scene": "GameNodeObjectData",
+		"layer": "GameLayerObjectData",
+		"skeleton": "SkeletonNodeObjectData",
 	}
-	if not nodeObject.get(widgetName):
+	if not nodeObject.get(widgetName.lower()):
 		print("unknown widgetName:'%s', regarded as Node by default."%widgetName)
 	text = text + '      <ObjectData Name="%s" ctype="%s">\n' %(widgetName, nodeObject.get(widgetName,"GameNodeObjectData"))
 	text = text + '        <Size X="%f" Y="%f" />\n' %(widgetSize.Width(), widgetSize.Height())
@@ -275,6 +275,16 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 		if result.upper() == str(defaultValue).upper():
 			return ""
 		result = result.replace("\n", "&#xA;")
+	else:
+		dictReplace = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			"\"": "&quot;",
+			"'": "&apos;",
+		}
+		for key in dictReplace:
+			result = result.replace(key, dictReplace[key])
 	
 	renameDict = {}
 	if replaceInfo != "":
