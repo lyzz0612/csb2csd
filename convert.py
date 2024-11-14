@@ -124,13 +124,13 @@ def getFrameText(frameData, property):
 
 	elif property == "Scale":
 		realFrame = frameData.ScaleFrame()
-		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleY())
 		text = text + getEasingText(realFrame.EasingData())
 		text = text + '          </ScaleFrame>\n'
 
 	elif property == "RotationSkew":
 		realFrame = frameData.ScaleFrame()
-		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleY())
 		text = text + getEasingText(realFrame.EasingData())
 		text = text + '          </ScaleFrame>\n'
 
@@ -160,7 +160,7 @@ def getFrameText(frameData, property):
 
 	elif property == "AnchorPoint":
 		realFrame = frameData.ScaleFrame()
-		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleX())
+		text = text + '          <ScaleFrame FrameIndex="%d" X="%f" Y="%f">\n' %(realFrame.FrameIndex(), realFrame.Scale().ScaleX(), realFrame.Scale().ScaleY())
 		text = text + getEasingText(realFrame.EasingData())
 		text = text + '          </ScaleFrame>\n'
 
