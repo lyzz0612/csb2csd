@@ -16,7 +16,16 @@
  compatibility helpers for numpy. """
 
 import sys
-import imp
+try:
+    from importlib.util import find_spec as _find_spec
+except Exception:
+    _find_spec = None
+
+# Keep a fallback to `imp` for very old Python versions where available.
+try:
+    import imp as _imp
+except Exception:
+    _imp = None
 
 PY2 = sys.version_info[0] == 2
 PY26 = sys.version_info[0:2] == (2, 6)
@@ -52,17 +61,26 @@ def import_numpy():
     Returns the numpy module if it exists on the system,
     otherwise returns None.
     """
-    try:
-        imp.find_module('numpy')
-        numpy_exists = True
-    except ImportError:
-        numpy_exists = False
+    if _find_spec is not None:
+        numpy_exists = _find_spec('numpy') is not None
+    elif _imp is not None:
+        try:
+            _imp.find_module('numpy')
+            numpy_exists = True
+        except ImportError:
+            numpy_exists = False
+    else:
+        try:
+            import importlib
+            numpy_exists = importlib.util.find_spec('numpy') is not None
+        except Exception:
+            try:
+                import numpy  # type: ignore
+                numpy_exists = True
+            except Exception:
+                numpy_exists = False
 
     if numpy_exists:
-        # We do this outside of try/except block in case numpy exists
-        # but is not installed correctly. We do not want to catch an
-        # incorrect installation which would manifest as an
-        # ImportError.
         import numpy as np
     else:
         np = None

@@ -31,8 +31,13 @@ csdPath = ""
 
 # override Table.String to avoid difference of 'bytes' between versions of Python
 Table_String = Parser.Table.String
-def Table_String_new(tab,off):
-	return Table_String(tab,off).decode("utf-8")
+def Table_String_new(tab, off):
+	# Call original Table.String and ensure we return a Python str
+	res = Table_String(tab, off)
+	if isinstance(res, bytes):
+		return res.decode("utf-8")
+	# already str (py3) or None
+	return res
 Parser.Table.String = Table_String_new
 
 str_types = (str,)
@@ -47,10 +52,13 @@ except:
 
 def normalizeResult(result):
 
-	if isinstance(result,str_types):
+	# Normalize bytes to str for Python3, keep str as-is
+	if isinstance(result, bytes):
+		return result.decode("utf-8")
+	if isinstance(result, str):
 		return result
-	if isinstance(result,float):
-		result = "%f"%result
+	if isinstance(result, float):
+		result = "%f" % result
 		if "." in result:
 			return result.rstrip("0").rstrip(".")
 		return str(result)
@@ -207,7 +215,9 @@ def writeAnimation(parseData):
 	text = '      <AnimationList>\n'
 	for i in range(animationNum):
 		animationData = parseData.AnimationList(i)
-		text = text + '        <AnimationInfo Name="%s" StartIndex="%d" EndIndex="%d" />\n' %(animationData.Name(), animationData.StartIndex(), animationData.EndIndex())
+		text = text + '        <AnimationInfo Name="%s" StartIndex="%d" EndIndex="%d">\n' % (animationData.Name(), animationData.StartIndex(), animationData.EndIndex())
+		# Optionally add RenderColor here if needed in the future
+		text = text + '        </AnimationInfo>\n'
 	text += '      </AnimationList>\n'
 	writeFile(text)
 
@@ -262,10 +272,13 @@ def getHeaderOption(optionData, optionKey, valuePath, defaultValue="", replaceIn
 	for path in valueList:
 		if not parentValue:
 			return ""
-		func = getattr(parentValue, path)
-		if not func:
+		func = getattr(parentValue, path, None)
+		if func is None:
 			return ""
-		parentValue = func()
+		if callable(func):
+			parentValue = func()
+		else:
+			parentValue = func
 
 	result = normalizeResult(parentValue)
 
@@ -328,10 +341,13 @@ def getChildProperty(optionData, optionKey, valuePath, renameProperty="", specia
 	valueList = valuePath.split(".")
 	parentValue = optionData
 	for path in valueList:
-		func = getattr(parentValue, path)
-		if not func:
+		func = getattr(parentValue, path, None)
+		if func is None:
 			return ""
-		parentValue = func()
+		if callable(func):
+			parentValue = func()
+		else:
+			parentValue = func
 
 	if specialType == "ImageData":
 		return getImageOption(optionKey, parentValue)
@@ -431,7 +447,7 @@ def startConvert(csbPath, csparsebinary, targetPath):
 
 	writeHeader(groupName)
 	writeAction(csparsebinary.Action())
-	# writeAnimation(csparsebinary)
+	writeAnimation(csparsebinary)
 	writeRootNode(nodeTree)
 	recursionConvertTree(nodeTree)
 	writeFooter()
